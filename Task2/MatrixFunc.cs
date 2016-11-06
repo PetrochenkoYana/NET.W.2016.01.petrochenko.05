@@ -6,58 +6,51 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
+    /// <summary>
+    /// Comparing to arrays :should return 1,0,-1
+    /// </summary>
+    public interface IComparor<in T> 
+    {
+         int Compare(T[] a,T[] b);
+    }
+    
     public static class MatrixFunc
     {
-
-       
-       
-        public static void BubbleSortSumUp( int[][] matrix)
+        /// <summary>
+        /// "Bubble" sorting of matrix strings with rule getting from first ICompare-type param
+        /// If matrix strings is null it get first places
+        /// </summary>
+        /// <param name="rule">The type of object must implement ICompare interface</param>
+        /// <param name="matrix"></param>
+        public static void BubbleSort(IComparor<int> rule, int[][] matrix)
         {
-            int[] arraySum = ArraySumStringMatrix(matrix);
-            for (int i = 0; i < arraySum.Length; i++)
+            for (int i = 0; i < matrix.Length; i++)
             {
-                for (int j = 0; j < arraySum.Length-i-1; j++)
+                for (int j = 0; j < matrix.Length - i - 1; j++)
                 {
-                    if (arraySum[j] > arraySum[j + 1])
+                    if (matrix[j] == null)
                     {
-                        var temp = arraySum[j];
-                        arraySum[j] = arraySum[j + 1];
-                        arraySum[j + 1] = temp;
-                        var tmp = matrix[j + 1];
-                        matrix[j + 1] = matrix[j];
-                        matrix[j] = tmp;
+                        continue;
+                    }
+                    else
+                    {
+                        if (matrix[j + 1] == null || rule.Compare(matrix[j], matrix[j + 1]) == 1)
+                        {
+                            Swap(ref matrix[j], ref matrix[j + 1]);
+                        }
+                        else continue;
                     }
                 }
 
-            }
+        }
 
         }
-        /// <summary>
-        /// Method for counting sums by strings in matrix
-        /// </summary>
-        /// <param name="matrix"></param>
-        /// <returns>Return array, sums for strings in matrix</returns>
-        private static int[] ArraySumStringMatrix(int[][] matrix)
-        {
-           int[] array=new int[matrix.Length];
-            for (int i = 0; i < matrix.Length; i++)
-            {
-                array[i] = ArraySum(matrix[i]);
-            }
-            return array;
 
-        }
-        /// <summary>
-        /// Sum of array
-        /// </summary>
-        /// <param name="array"></param>
-        /// <returns></returns>
-        private static int ArraySum(int[] array)
+        private static void Swap(ref int[] a,ref int[] b)
         {
-            int sum = 0;
-            for (int i = 0; i < array.Length; i++)
-                        sum += array[i];
-            return sum;
+            var tmp = a;
+            a = b;
+            b = tmp;
 
         }
     }
